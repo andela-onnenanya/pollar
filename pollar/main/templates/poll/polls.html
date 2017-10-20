@@ -1,0 +1,21 @@
+{% extends 'main/index.html' %}
+
+{% block content %}
+  <div class="poll-container">       
+    <div class="poll-main">
+      <div class="poll-pane">
+        <div class="poll-pane-head">Polls</div>           
+        <div class="poll-pane-body">
+          {% block poll_list %}
+          {% endblock %}
+        </div>
+      </div>
+      <div class="poll-view">
+        {% block poll_view %} 
+        {% endblock %}         
+      </div>
+    </div>
+    <div class="display-box" id="displayBox" >Submitting vote . . .</div>
+  </div>
+  <div class="mask" id="mask" ></div>
+{% endblock %}

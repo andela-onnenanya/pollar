@@ -1,0 +1,39 @@
+<html ng-app="clementineApp">
+  <head>
+     <title>VotingKing | Home</title>
+     <link rel="icon" type="image/x-icon" href="/public/img/favicon.png">
+     <link href="https://fonts.googleapis.com/css?family=Cabin+Sketch|Josefin+Slab|Khand|Marck+Script|Monoton|Poiret+One|Rajdhani|Special+Elite|VT323" rel="stylesheet">
+     <link rel="stylesheet" href="https://www.w3schools.com/lib/w3.css">
+     <link href="/public/css/main.css" rel="stylesheet" type="text/css">
+  </head>
+
+  <body>
+    
+    <div class="header">
+      <div class="header-inside">
+        <div class="title">
+            <img src="https://github.com/obinnaeye/images/blob/master/votebanner.png?raw=true">
+        </div>
+        <div class="header-tools">
+           <a href="/"><button id="home">Home</button></a>
+           <a href="/guest/about"><button id="about">About</button></a>
+           {% if user.is_authenticated %}
+              <a href="/logout"><button id="login">Log Out</button></a>
+           {% else %}
+              <a href="/login"><button id="login">Log In</button></a>
+              <a href="/signup"><button id="singup">Sign Up</button></a>
+           {% endif %}
+           <a href="/polls"><button id="polls">Polls</button></a>
+        </div>
+      </div>
+    </div>
+    <div class="content container">
+        <div class="row">
+            <div class="col-md-8">
+                {% block content %}
+                {% endblock %}
+            </div>
+        </div>
+    </div>
+  </body>
+</html>

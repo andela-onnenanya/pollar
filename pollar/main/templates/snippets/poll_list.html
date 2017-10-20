@@ -1,0 +1,10 @@
+{% extends 'poll/polls.html' %}
+
+{% block content %}
+  <li>
+    {% for poll in polls %}
+      <li class="poll-ref" id={{ poll._id }}> {{ poll.name }}:
+        <span>{{ poll.author }}</span>
+      </li>
+    {% endfor %}
+  </li>
