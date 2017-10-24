@@ -5,7 +5,7 @@ from django.shortcuts import redirect
 from django.utils import timezone
 
 def home(request):
-  return render(request, 'main/home.html', {'greeting': 'Hi, How is coding going?'})
+  return render(request, 'main/index.html', {'greeting': 'Hi, How is coding going?'})
 
 def poll_new(request):
     if request.method == "POST":
@@ -19,3 +19,6 @@ def poll_new(request):
     else:
         form = PollForm()
     return render(request, 'snippets/poll_edit.html', {'form': form})
+
+def signup(request):
+    return render(request, 'user/signup.html')
