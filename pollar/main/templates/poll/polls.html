@@ -10,7 +10,8 @@
           {% endblock %}
         </div>
       </div>
-      {% block poll_view %} 
+      {% block poll_view %}
+        {% include "snippets/poll_view.html" %}
       {% endblock %}
     </div>
     <div class="display-box" id="displayBox" >Submitting vote . . .</div>

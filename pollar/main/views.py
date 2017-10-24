@@ -29,6 +29,7 @@ def logout_user(request):
 def home(request):
   return render(request, 'main/index.html', {'greeting': 'Hi, How is coding going?'})
 
+@login_required
 def poll_new(request):
     if request.method == "POST":
         form = PollForm(request.POST)
@@ -41,6 +42,10 @@ def poll_new(request):
     else:
         form = PollForm()
     return render(request, 'snippets/poll_edit.html', {'form': form})
+
+@login_required
+def polls(request):
+    return render(request, 'poll/polls.html')
 
 def signup(request):
     if request.method == 'POST':

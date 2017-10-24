@@ -1,14 +1,12 @@
-{% extends 'poll/polls.html' %}
 
 {% block poll_view %}
   <div class="poll-view vote-only">
-    <div class="poll-view-head" id="pollViewHead">  {{ pollName }} : <span>by  {{ author }} </span>
+    <div class="poll-view-head" id="pollViewHead">   pollName  : <span>by   author  </span>
     </div>
     <div class="poll-view-body">
       <div class="poll-view-selection">
         <p class="poll-view-desc"> desc </p>
         <select name="candidates" required class="poll-selection" id = "pollSelection">
-          <!-- {{ getOptions(obj) }} -->
           {% block options %}
           {% endblock %}
         </select>
@@ -16,7 +14,7 @@
         <input type="submit" class="submit-vote" value="VOTE" id="submitVote">
       </div>
       <div class="poll-view-chartArea">
-        <div class="poll-view-chartTitle" id="chartTitle"> {{ chart_title}} </div>
+        <div class="poll-view-chartTitle" id="chartTitle"> chart_title </div>
           {% block chart %}
           {% endblock %}
         <div class="poll-view-chart" id="chart"></div>
