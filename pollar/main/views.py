@@ -1,10 +1,30 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from .forms import PollForm, ChoiceForm, SignUpForm
-from django.shortcuts import redirect
 from django.utils import timezone
-from django.contrib.auth import login, authenticate
+from django.contrib.auth import login, authenticate, logout
 from django.shortcuts import render, redirect
+from django.http import *
+from django.template import RequestContext
+from django.contrib.auth.decorators import login_required
+
+def login_user(request):
+    if request.user.is_authenticated():
+        return redirect('/')
+    if request.POST:
+        username = request.POST['username']
+        password = request.POST['password']
+
+        user = authenticate(username=username, password=password)
+        if user is not None:
+            if user.is_active:
+                login(request, user)
+                return redirect('/')
+    return render(request, 'user/login.html')
+
+def logout_user(request):
+    logout(request)
+    return redirect('/')
 
 def home(request):
   return render(request, 'main/index.html', {'greeting': 'Hi, How is coding going?'})
@@ -21,9 +41,6 @@ def poll_new(request):
     else:
         form = PollForm()
     return render(request, 'snippets/poll_edit.html', {'form': form})
-
-def signup(request):
-    return render(request, 'user/signup.html')
 
 def signup(request):
     if request.method == 'POST':

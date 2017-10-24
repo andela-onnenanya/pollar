@@ -457,18 +457,10 @@ select option:hover{
 }
 
 /****************LOGIN******************/
-.login-container{
-  width: 600px;
-  height: auto;
-  background: #F5CBA7;
-  margin: 150px auto;
-  text-align: center;
-  padding: 50px;
-  border-radius: 50px;
-}
+
 .login{
-  margin: 0 auto;
-  width: 400px;
+  margin: 200px auto;
+  width: 300px;
 }
 
 .github-img{
