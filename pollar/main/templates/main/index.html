@@ -32,9 +32,26 @@
         <div class="row">
             <div class="col-md-8">
                 {% block content %}
+                  <div class="image">
+                      <img class="mySlides active" src="../../../static/img/voteme1200x450.png">
+                      <img class="mySlides" src="../../../static/img/createpoll.png">
+                      <img class="mySlides" src="../../../static/img/share.png">
+                      <img class="mySlides" src="../../../static/img/polldelete.png">
+                      <a class="w3-btn-floating w3-display-left" onclick="plusDivs(-1)">&#10094;</a>
+                      <a class="w3-btn-floating w3-display-right" onclick="plusDivs(+1)">&#10095;</a>
+                      <div class="w3-center w3-display-bottommiddle" style="width:100%">
+                        <span class="w3-badge demo w3-border" onclick="currentDiv(1)"></span>
+                        <span class="w3-badge demo w3-border" onclick="currentDiv(2)"></span>
+                        <span class="w3-badge demo w3-border" onclick="currentDiv(3)"></span>
+                        <span class="w3-badge demo w3-border" onclick="currentDiv(4)"></span>
+                      </div>
+                  </div>
                 {% endblock %}
             </div>
         </div>
     </div>
+    {% block scripts %}
+    {% endblock %}
+    <script type="text/javascript" src="../../../static/js/slide.js"></script>
   </body>
 </html>
