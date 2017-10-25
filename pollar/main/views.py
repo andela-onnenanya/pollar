@@ -32,15 +32,20 @@ def home(request):
 @login_required
 def poll_new(request):
     if request.method == "POST":
-        form = PollForm(request.POST)
-        if form.is_valid():
-            poll = form.save(commit=False)
+        poll_form = PollForm(request.POST)
+        choice_form = ChoiceForm(request.POST)
+        if poll_form.is_valid() and choice_form.is_valid:
+            poll = poll_form.save(commit=False)
             poll.author = request.user
             poll.save()
-            return redirect('polls')
+            choice = choice_form.save(commit=False)
+            choice.poll = poll
+            choice.save()
+            return redirect('../.')
     else:
-        form = PollForm()
-    return render(request, 'snippets/poll_edit.html', {'form': form})
+        poll_form = PollForm()
+        choice_form = ChoiceForm()
+    return render(request, 'snippets/add_poll.html', {'poll_form': poll_form, 'choice_form': choice_form})
 
 @login_required
 def polls(request):

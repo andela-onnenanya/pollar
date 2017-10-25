@@ -77,6 +77,11 @@ button:hover{
   cursor: pointer;
 }
 
+.form {
+  margin: 200px auto;
+  width: 308px
+}
+
 /***************POLLS********************/
 .poll-main{
   margin: 70px auto 30px;
