@@ -36,9 +36,8 @@ def poll_new(request):
         if form.is_valid():
             poll = form.save(commit=False)
             poll.author = request.user
-            poll.published_date = timezone.now()
             poll.save()
-            return redirect('home')
+            return redirect('polls')
     else:
         form = PollForm()
     return render(request, 'snippets/poll_edit.html', {'form': form})
@@ -60,3 +59,13 @@ def signup(request):
     else:
         form = SignUpForm()
     return render(request, 'user/signup.html', {'form': form})
+
+def add_poll(request):
+    if request.method == 'POST':
+        form = PollForm(request.POST)
+        if form.is_valid():
+            form.save() 
+            return redirect('/polls')
+    else:
+        form = PollForm()
+    return render(request, 'add_poll.html', {'form': form})

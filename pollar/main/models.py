@@ -7,23 +7,26 @@ from django.contrib.auth.models import User
 #     description = models.CharField(max_length=50)
 #     author = models.ForeignKey(User, related_name='poll_author')
 
+
 class Poll(models.Model):
-    question = models.CharField(max_length=255)
+    title = models.CharField(max_length=30)
+    description = models.CharField(max_length=50)
+    author = models.ForeignKey(User, related_name='poll_author')
     date = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return self.question
+        return '%s %s' % (self.title, self.description)
 
 class Choice(models.Model):
     poll = models.ForeignKey(Poll)
-    choice = models.CharField(max_length=255, blank=True)
-    
+    choice = models.CharField(max_length=30, blank=True)
+
     def __str__(self):
         return self.choice
 
 class Vote(models.Model):
     poll = models.ForeignKey(Poll)
     choiceVote = models.ForeignKey(Choice)
-    
+
     def __str__(self):
         return self.choiceVote
