@@ -7,6 +7,7 @@ from django.shortcuts import render, redirect
 from django.http import *
 from django.template import RequestContext
 from django.contrib.auth.decorators import login_required
+from .models import Choice, Poll, Vote
 
 def login_user(request):
     if request.user.is_authenticated():
@@ -27,7 +28,7 @@ def logout_user(request):
     return redirect('/')
 
 def home(request):
-  return render(request, 'main/index.html', {'greeting': 'Hi, How is coding going?'})
+    return render(request, 'main/index.html', {'greeting': 'Hi, How is coding going?'})
 
 @login_required
 def poll_new(request):
@@ -38,9 +39,15 @@ def poll_new(request):
             poll = poll_form.save(commit=False)
             poll.author = request.user
             poll.save()
+            poll_choices = choice_form.data['choice'].split(',')
+            #Remove duplicates
+            poll_choices = list(set(poll_choices))
             choice = choice_form.save(commit=False)
-            choice.poll = poll
-            choice.save()
+            for poll_choice in poll_choices:
+                choice.pk = None
+                choice.choice = poll_choice
+                choice.poll = poll
+                choice.save()
             return redirect('../.')
     else:
         poll_form = PollForm()
@@ -64,13 +71,3 @@ def signup(request):
     else:
         form = SignUpForm()
     return render(request, 'user/signup.html', {'form': form})
-
-def add_poll(request):
-    if request.method == 'POST':
-        form = PollForm(request.POST)
-        if form.is_valid():
-            form.save() 
-            return redirect('/polls')
-    else:
-        form = PollForm()
-    return render(request, 'add_poll.html', {'form': form})
