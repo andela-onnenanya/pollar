@@ -47,6 +47,7 @@ def poll_new(request):
                 choice.pk = None
                 choice.choice = poll_choice
                 choice.poll = poll
+                choice.vote = 0
                 choice.save()
             return redirect('../.')
     else:
@@ -71,3 +72,16 @@ def signup(request):
     else:
         form = SignUpForm()
     return render(request, 'user/signup.html', {'form': form})
+
+def add_vote(request, poll_id):
+        poll = Poll.objects.get(id=poll_id) 
+        choice = Choice.objects.filter(poll=poll_id).order_by('id')
+        if request.method == 'POST':
+            vote = request.POST.get('choice')
+            if vote:
+                vote = Choice.objects.get(id=vote)  
+                #saves the poll id, user id, and choice to the Votes table
+                v = Votes(poll=poll, choiceVote = vote)
+                v.save()
+                #redirects the user to the results page after they submit their vote
+                return redirect('../')

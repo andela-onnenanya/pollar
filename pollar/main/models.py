@@ -30,6 +30,10 @@ class Choice(models.Model):
 class Vote(models.Model):
     poll = models.ForeignKey(Poll)
     choiceVote = models.ForeignKey(Choice, on_delete=models.CASCADE)
+    voter = models.ForeignKey(User, null=True)
+
+    class Meta:
+        unique_together = (("choiceVote", "poll", "voter"),)
 
     def __str__(self):
-        return self.choiceVote
+        return '%s %s %s' % (self.choiceVote, self.voter, self.poll)
