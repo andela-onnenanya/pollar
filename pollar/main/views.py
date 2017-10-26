@@ -55,9 +55,22 @@ def poll_new(request):
         choice_form = ChoiceForm()
     return render(request, 'snippets/add_poll.html', {'poll_form': poll_form, 'choice_form': choice_form})
 
-@login_required
 def polls(request):
-    return render(request, 'poll/polls.html')
+    all_polls = Poll.objects.all().order_by('date')
+    if all_polls:
+        first_poll = all_polls[0]
+        first_poll_id = first_poll.id
+        return redirect('/polls/' + str(first_poll_id))
+    return render(request, 'poll/polls.html', {'polls': all_polls})
+
+def polls_view(request, poll_id):
+    try:
+        current_poll = Poll.objects.filter(id = poll_id)
+    except NotImplementedError:
+        return HttpResponse('No Poll Found with the specified id')
+    all_polls = Poll.objects.all().order_by('date')
+    options = Choice.objects.filter(poll=poll_id)
+    return render(request, 'poll/polls.html', {'polls': all_polls, 'options': options, 'current_poll': current_poll[0]})
 
 def signup(request):
     if request.method == 'POST':
