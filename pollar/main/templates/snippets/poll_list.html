@@ -1,0 +1,17 @@
+
+{% block poll_list %}
+  <ul>
+    {% if polls %}
+      {% for poll in polls %}
+        <li 
+          class="poll-ref {% if poll.id == current_poll.id %} active {% endif %}" 
+          id={{ poll.id }}>
+          {{ poll.title }}:
+          <span>{{ poll.author }}</span>
+        </li>
+      {% endfor %}
+    {% else %}
+      <li class="poll-ref"> No Polls Here!</li>
+    {% endif %}
+  </ul>
+{% endblock %}

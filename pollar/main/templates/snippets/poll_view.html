@@ -1,0 +1,25 @@
+
+{% block poll_view %}
+  <div class="poll-view vote-only">
+    <div class="poll-view-head" id="pollViewHead"> {{ current_poll.title }}  : <span>by   {{ current_poll.author }}  </span>
+    </div>
+    <div class="poll-view-body">
+      <div class="poll-view-selection">
+        <p class="poll-view-desc"> {{ current_poll.description }} </p>
+        <select name="candidates" required class="poll-selection" id = "pollSelection">
+          {% block options %}
+            {% include "snippets/poll_options.html" %}
+          {% endblock %}
+        </select>
+        <br>
+        <input type="submit" class="submit-vote" value="VOTE" id="submitVote" onclick="voterCheck()">
+      </div>
+      <div class="poll-view-chartArea">
+        <div class="poll-view-chartTitle" id="chartTitle"> {{ title }} </div>
+          {% block chart %}
+          {% endblock %}
+        <div class="poll-view-chart" id="chart"></div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
