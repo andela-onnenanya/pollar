@@ -1,1 +1,0 @@
-web: gunicorn voteman.wsgi --log-file -
