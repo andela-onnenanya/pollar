@@ -115,6 +115,6 @@ def votes(request, poll_id):
 def voter_check(user, poll):
     choice = Vote.objects.filter(poll=poll, voter=user)
     print ('CHOICE', choice)
-    if choice[0]:
+    if len(choice) > 0:
         return False
     return True
