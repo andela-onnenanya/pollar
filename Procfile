@@ -1,1 +1,1 @@
-web: gunicorn pollar.pollar.wsgi
+web: gunicorn pollar.pollar.wsgi --settings=pollar.pollar.settings
