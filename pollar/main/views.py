@@ -1,5 +1,6 @@
 from django.shortcuts import render
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
+from django.forms.models import model_to_dict
 from .forms import PollForm, ChoiceForm, SignUpForm
 from django.utils import timezone
 from django.contrib.auth import login, authenticate, logout
@@ -63,14 +64,22 @@ def polls(request):
         return redirect('/polls/' + str(first_poll_id))
     return render(request, 'poll/polls.html', {'polls': all_polls})
 
+def trimString(word, number):
+  if word:
+    word = word
+    return word
+  else:
+    return 'Chart Title'
+
 def polls_view(request, poll_id):
     try:
         current_poll = Poll.objects.filter(id = poll_id)
+        title = trimString(current_poll[0].title, 20)
     except NotImplementedError:
         return HttpResponse('No Poll Found with the specified id')
     all_polls = Poll.objects.all().order_by('date')
     options = Choice.objects.filter(poll=poll_id)
-    return render(request, 'poll/polls.html', {'polls': all_polls, 'options': options, 'current_poll': current_poll[0]})
+    return render(request, 'poll/polls.html', {'title': title, 'polls': all_polls, 'options': options, 'current_poll': current_poll[0]})
 
 def signup(request):
     if request.method == 'POST':
@@ -86,15 +95,23 @@ def signup(request):
         form = SignUpForm()
     return render(request, 'user/signup.html', {'form': form})
 
-def add_vote(request, poll_id):
+def votes(request, poll_id):
         poll = Poll.objects.get(id=poll_id) 
-        choice = Choice.objects.filter(poll=poll_id).order_by('id')
         if request.method == 'POST':
-            vote = request.POST.get('choice')
-            if vote:
-                vote = Choice.objects.get(id=vote)  
+            choice_id = request.POST.get('choice')
+            choice = Choice.objects.filter(poll=poll_id, id=choice_id)[0]
+            if choice:
                 #saves the poll id, user id, and choice to the Votes table
-                v = Votes(poll=poll, choiceVote = vote)
-                v.save()
+                vote = Vote(poll=poll, choiceVote = choice)
+                vote.save()
                 #redirects the user to the results page after they submit their vote
-                return redirect('../')
+                return HttpResponse(request, 'Your vote has been submitted successfully!')
+        
+
+def voter_check(request, poll_id):
+    poll = Poll.objects.get(id=poll_id)
+    status = {
+        'status': model_to_dict(poll)
+    }
+
+    return JsonResponse(status)
