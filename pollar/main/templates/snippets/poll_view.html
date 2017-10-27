@@ -12,10 +12,10 @@
           {% endblock %}
         </select>
         <br>
-        <input type="submit" class="submit-vote" value="VOTE" id="submitVote">
+        <input type="submit" class="submit-vote" value="VOTE" id="submitVote" onclick="voterCheck()">
       </div>
       <div class="poll-view-chartArea">
-        <div class="poll-view-chartTitle" id="chartTitle"> chart_title </div>
+        <div class="poll-view-chartTitle" id="chartTitle"> {{ title }} </div>
           {% block chart %}
           {% endblock %}
         <div class="poll-view-chart" id="chart"></div>
