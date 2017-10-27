@@ -1,1 +1,1 @@
-web: gunicorn pollar.wsgi --log-file -
+web: gunicorn voteman.wsgi --log-file -
