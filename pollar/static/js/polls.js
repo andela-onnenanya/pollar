@@ -36,15 +36,15 @@ function updateChart(data){
 }
 
 function voterCheck(){
-  console.log(urlPath)
   var choice = document.getElementById("pollSelection").value;
-  $.ajax({
-    type: "POST",
-    url: `${appUrl}/api${urlPath}`,
-    data: { choice },
-    success: updateChart
-  });
-  // ajaxFunctions.ajaxRequest('POST', `${appUrl}/api${urlPath}?choice=${choice}`, updateChart)
+  if (choice){
+    $.ajax({
+      type: "POST",
+      url: `${appUrl}/api${urlPath}`,
+      data: { choice },
+      success: updateChart
+    });
+  }
 }
 
 function sendVote(){

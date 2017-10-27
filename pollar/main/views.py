@@ -99,19 +99,22 @@ def votes(request, poll_id):
         poll = Poll.objects.get(id=poll_id) 
         if request.method == 'POST':
             choice_id = request.POST.get('choice')
+            user = request.user
+            can_vote = voter_check(user, poll)
             choice = Choice.objects.filter(poll=poll_id, id=choice_id)[0]
-            if choice:
-                #saves the poll id, user id, and choice to the Votes table
+            if choice and can_vote:
                 vote = Vote(poll=poll, choiceVote = choice)
+                if request.user.is_authenticated:
+                    vote.voter = request.user
                 vote.save()
-                #redirects the user to the results page after they submit their vote
-                return HttpResponse(request, 'Your vote has been submitted successfully!')
+                return HttpResponse('Your vote has been submitted successfully!')
+            else:
+                return HttpResponse('You have voted before!')
         
 
-def voter_check(request, poll_id):
-    poll = Poll.objects.get(id=poll_id)
-    status = {
-        'status': model_to_dict(poll)
-    }
-
-    return JsonResponse(status)
+def voter_check(user, poll):
+    choice = Vote.objects.filter(poll=poll, voter=user)
+    print ('CHOICE', choice)
+    if choice[0]:
+        return False
+    return True
