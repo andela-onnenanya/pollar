@@ -1,4 +1,5 @@
 env
 pollar/main/__pycache__/
 pollar/pollar/__pycache__/
+pollar/pollar/dev_settings.py
 db.sqlite3
