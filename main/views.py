@@ -105,7 +105,7 @@ def votes(request, poll_id):
             if choice and can_vote:
                 vote = Vote(poll=poll, choiceVote = choice)
                 if request.user.is_authenticated:
-                    vote.voter = request.user
+                    vote.voter = request.user.id
                 vote.save()
                 return HttpResponse('Your vote has been submitted successfully!')
             else:
