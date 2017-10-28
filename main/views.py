@@ -29,6 +29,7 @@ def logout_user(request):
     return redirect('/')
 
 def home(request):
+    print('USER', request.user)
     return render(request, 'main/index.html', {'greeting': 'Hi, How is coding going?'})
 
 @login_required
@@ -103,9 +104,10 @@ def votes(request, poll_id):
             can_vote = voter_check(user, poll)
             choice = Choice.objects.filter(poll=poll_id, id=choice_id)[0]
             if choice and can_vote:
-                vote = Vote(poll=poll, choiceVote = choice)
                 if request.user.is_authenticated:
-                    vote.voter = request.user.id
+                    vote = Vote(poll=poll, choiceVote = choice, voter=user)
+                else:
+                    vote = Vote(poll=poll, choiceVote = choice)
                 vote.save()
                 return HttpResponse('Your vote has been submitted successfully!')
             else:
@@ -113,8 +115,10 @@ def votes(request, poll_id):
         
 
 def voter_check(user, poll):
-    choice = Vote.objects.filter(poll=poll, voter=user)
-    print ('CHOICE', choice)
+    try:
+        choice = Vote.objects.filter(poll=poll, voter=user)
+    except TypeError:
+        choice = []
     if len(choice) > 0:
         return False
     return True
