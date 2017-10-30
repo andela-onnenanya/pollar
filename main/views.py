@@ -105,9 +105,9 @@ def votes(request, poll_id):
     if request.method == 'POST':
         choice_id = request.POST.get('choice')
         user = request.user
-        can_vote = voter_check(user, poll)
+        can_vote = voter_check(request,user, poll)
         choice = Choice.objects.filter(poll=poll_id, id=choice_id)[0]
-        if choice and can_vote:
+        if choice and can_vote['status'] == True:
             if request.user.is_authenticated:
                 vote = Vote(poll=poll, choiceVote = choice, voter=user)
             else:
@@ -115,18 +115,9 @@ def votes(request, poll_id):
             vote.save()
             result = get_votes(poll_id)
             return JsonResponse({'votes': result, 'message':'Your vote has been submitted successfully!'})
-            # poll_votes = Vote.objects.filter(poll=poll)
-            # return JsonResponse({'message':'Your vote has been submitted successfully!', \
-            #     'votes': votes,
-            #     'statusCode': 200,
-            # })
         else:
             result = get_votes(poll_id)
-            return JsonResponse({'votes':result, 'message':'You have already voted and cannot vote again!'})
-            # return JsonResponse({'message':'You have already voted and cannot vote again!', \
-            #     'votes': poll_votes,
-            #     'statusCode': 200,
-            # })
+            return JsonResponse({'votes':result, 'message':can_vote['message']})
     if request.method == 'GET':
         result = get_votes(poll_id)
         return JsonResponse({'votes': result})
@@ -155,13 +146,15 @@ def get_votes(poll_id):
     return result
 
 
-def voter_check(user, poll):
+def voter_check(request, user, poll):
+    if not request.user.is_authenticated:
+        return {'status':False, 'message':'Please sign in to vote!'}
     try:
         choice = Vote.objects.filter(poll=poll, voter=user)
     except TypeError:
         choice = []
     if len(choice) > 0:
-        return False
+        return {'status':False, 'message':'You have already voted and cannot vote again!' }
     return True
 
 
