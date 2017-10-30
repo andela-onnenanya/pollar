@@ -470,6 +470,11 @@ select option:hover{
   width: 300px;
 }
 
+.signup{
+  width: 800px;
+  margin: 180px auto;
+}
+
 .github-img{
   width: 100px;
   height: 100px;
