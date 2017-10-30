@@ -440,6 +440,8 @@ select option:hover{
   font-size: 20px;
   color: green;
   font-weight: bold;
+  box-sizing: unset !important;
+  font-family: none !important;
 }
 #linkBox{
   width: 700px;
