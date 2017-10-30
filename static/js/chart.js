@@ -41,7 +41,6 @@ var chartOptions = {
 function drawChart(response){
   const votes = response.votes
   const message = response.message
-  console.log(votes)
   if (votes.length == 0){
     document.getElementById('chart').innerHTML = "<div rel='no-chart'>This poll has no votes yet. Be the first to vote!</div>"
   }
@@ -54,7 +53,6 @@ function drawChart(response){
      
      // Set chart options
     var len = votes.length;
-    console.log(len)
     while (len){
       var vote = votes[len-1];
       data.addRow([vote.name, vote.vote]);
