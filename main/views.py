@@ -163,3 +163,8 @@ def voter_check(user, poll):
     if len(choice) > 0:
         return False
     return True
+
+
+def about(request):
+    if request.method == 'GET':
+        return HttpResponse('Page under maintenance. Will be up in a 3 days time!')
