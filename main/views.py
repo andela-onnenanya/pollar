@@ -30,7 +30,6 @@ def logout_user(request):
     return redirect('/')
 
 def home(request):
-    print('USER', request.user)
     return render(request, 'main/index.html', {'greeting': 'Hi, How is coding going?'})
 
 @login_required
@@ -105,9 +104,9 @@ def votes(request, poll_id):
     if request.method == 'POST':
         choice_id = request.POST.get('choice')
         user = request.user
-        can_vote = voter_check(request,user, poll)
+        can_vote = voter_check(request, user, poll)
         choice = Choice.objects.filter(poll=poll_id, id=choice_id)[0]
-        if choice and can_vote['status'] == True:
+        if choice and can_vote is True:
             if request.user.is_authenticated:
                 vote = Vote(poll=poll, choiceVote = choice, voter=user)
             else:
@@ -116,8 +115,12 @@ def votes(request, poll_id):
             result = get_votes(poll_id)
             return JsonResponse({'votes': result, 'message':'Your vote has been submitted successfully!'})
         else:
+            try:
+                message = can_vote['message']
+            except TypeError:
+                message = 'You have not made any choice!'
             result = get_votes(poll_id)
-            return JsonResponse({'votes':result, 'message':can_vote['message']})
+            return JsonResponse({'votes':result, 'message': message})
     if request.method == 'GET':
         result = get_votes(poll_id)
         return JsonResponse({'votes': result})
@@ -142,7 +145,6 @@ def get_votes(poll_id):
             result.append(choice_obj)
         if len(poll_votes_flat) == 0:
             result = []
-    print(result, poll_votes_flat)
     return result
 
 
