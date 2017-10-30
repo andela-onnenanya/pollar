@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.db import models
 from django.http import HttpResponse, JsonResponse
 from django.forms.models import model_to_dict
 from .forms import PollForm, ChoiceForm, SignUpForm
@@ -73,14 +74,17 @@ def trimString(word, number):
     return 'Chart Title'
 
 def polls_view(request, poll_id):
-    try:
-        current_poll = Poll.objects.filter(id = poll_id)
-        title = trimString(current_poll[0].title, 20)
-    except NotImplementedError:
-        return HttpResponse('No Poll Found with the specified id')
+    if request.method == 'GET':
+        try:
+            current_poll = Poll.objects.filter(id = poll_id)
+            title = trimString(current_poll[0].title, 20)
+        except NotImplementedError:
+            return HttpResponse('No Poll Found with the specified id')
     all_polls = Poll.objects.all().order_by('date')
     options = Choice.objects.filter(poll=poll_id)
-    return render(request, 'poll/polls.html', {'title': title, 'polls': all_polls, 'options': options, 'current_poll': current_poll[0]})
+    return render(request, 'poll/polls.html', 
+        {'title': title, 'polls': all_polls, 'options': options, 'current_poll': current_poll[0]}
+        )
 
 def signup(request):
     if request.method == 'POST':
@@ -97,22 +101,59 @@ def signup(request):
     return render(request, 'user/signup.html', {'form': form})
 
 def votes(request, poll_id):
-        poll = Poll.objects.get(id=poll_id) 
-        if request.method == 'POST':
-            choice_id = request.POST.get('choice')
-            user = request.user
-            can_vote = voter_check(user, poll)
-            choice = Choice.objects.filter(poll=poll_id, id=choice_id)[0]
-            if choice and can_vote:
-                if request.user.is_authenticated:
-                    vote = Vote(poll=poll, choiceVote = choice, voter=user)
-                else:
-                    vote = Vote(poll=poll, choiceVote = choice)
-                vote.save()
-                return HttpResponse('Your vote has been submitted successfully!')
+    poll = Poll.objects.get(id=poll_id) 
+    if request.method == 'POST':
+        choice_id = request.POST.get('choice')
+        user = request.user
+        can_vote = voter_check(user, poll)
+        choice = Choice.objects.filter(poll=poll_id, id=choice_id)[0]
+        if choice and can_vote:
+            if request.user.is_authenticated:
+                vote = Vote(poll=poll, choiceVote = choice, voter=user)
             else:
-                return HttpResponse('You have voted before!')
+                vote = Vote(poll=poll, choiceVote = choice)
+            vote.save()
+            result = get_votes(poll_id)
+            return JsonResponse({'votes': result, 'message':'Your vote has been submitted successfully!'})
+            # poll_votes = Vote.objects.filter(poll=poll)
+            # return JsonResponse({'message':'Your vote has been submitted successfully!', \
+            #     'votes': votes,
+            #     'statusCode': 200,
+            # })
+        else:
+            result = get_votes(poll_id)
+            return JsonResponse({'votes':result, 'message':'You have already voted and cannot vote again!'})
+            # return JsonResponse({'message':'You have already voted and cannot vote again!', \
+            #     'votes': poll_votes,
+            #     'statusCode': 200,
+            # })
+    if request.method == 'GET':
+        result = get_votes(poll_id)
+        return JsonResponse({'votes': result})
         
+def get_votes(poll_id):
+    poll_votes = Vote.objects.filter(poll=poll_id).values('choiceVote').annotate(n=models.Count("pk"))
+    poll_votes_flat = Vote.objects.filter(poll=poll_id).values_list('choiceVote', flat=True)
+    choices = Choice.objects.filter(poll = poll_id).values('id', 'choice')
+    result = []
+    for choice in choices:
+        name = choice['choice']
+        choice_obj = {}
+        choice_id = choice['id']
+        for poll_vote in poll_votes:
+            if poll_vote['choiceVote'] == choice_id:
+                choice_obj['name'] = name
+                choice_obj['vote'] = poll_vote['n']
+                result.append(choice_obj)
+        if choice_id not in poll_votes_flat:
+            choice_obj['name'] = name
+            choice_obj['vote'] = 0
+            result.append(choice_obj)
+        if len(poll_votes_flat) == 0:
+            result = []
+    print(result, poll_votes_flat)
+    return result
+
 
 def voter_check(user, poll):
     try:
