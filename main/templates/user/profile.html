@@ -1,0 +1,16 @@
+{% extends 'main/index.html' %}
+{% block content %}
+  <div class="profile-container">
+    <div class="profile-pix" id="profilePix" style="backgroundImage:{{ profilePixUrl -Please fix this later }}"></div>       
+    <div class="profile-main">
+      <h4 class="profile-name" id = "profileName">{{ user.fullName }}</h4>
+      <ul class="profile-poll-list" id="profilePolls">
+        {% block userpolls %}
+        <li class="profile-poll">
+          <span id="loading">Loading your polls...</span>
+        </li>
+        {% endblock %}
+      </ul>
+    </div>
+  </div>
+{% endblock %}

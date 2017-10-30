@@ -1,0 +1,28 @@
+{% extends 'main/index.html' %}
+
+{% block content %}
+  <div class="poll-container">       
+    <div class="poll-main">
+      <div class="poll-pane">
+        <div class="poll-pane-head">Polls</div>           
+        <div class="poll-pane-body">
+          {% block poll_list %}
+            {% include "snippets/poll_list.html" %}
+          {% endblock %}
+        </div>
+      </div>
+      {% block poll_view %}
+        {% include "snippets/poll_view.html" %}
+      {% endblock %}
+    </div>
+    <div class="display-box" id="displayBox" >Submitting vote . . .</div>
+  </div>
+  <div class="mask" id="mask" ></div>
+{% endblock %}
+{% block scripts %}
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+  <script type="text/javascript" src="../../../static/js/ajax-functions.js"></script>
+  <script type="text/javascript" src="../../../static/js/chart.js"></script>
+  <script type="text/javascript" src="../../../static/js/polls.js"></script>
+{% endblock %}

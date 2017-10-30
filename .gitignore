@@ -1,0 +1,5 @@
+env
+main/__pycache__/
+pollar/__pycache__/
+pollar/dev_settings.py
+db.sqlite3

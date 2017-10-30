@@ -1,0 +1,12 @@
+{% block poll_options %}
+  <ul>
+    {% if options %}
+      <option value="" disabled selected hidden>Select Whom to vote for...</option>
+      {% for option in options %}
+        <option class="vote-option" value="{{ option.id }}">{{ option.choice }}</option>
+      {% endfor %}
+    {% else %}
+      <option value="" disabled selected hidden>Select Choice...</option>
+    {% endif %}
+  </ul>
+{% endblock %}
